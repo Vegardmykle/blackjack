@@ -3,6 +3,10 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class GuiBlackjackGame {
+    private static JPanel dealerPanel;
+    private static JPanel spillerPanel;
+    private static JPanel knappPanel;
+    private static JLabel vinnerLabel;
 
     public static void main(String[] args) {
         try {
@@ -52,7 +56,7 @@ public class GuiBlackjackGame {
         dealer.trekkKort(deck);
 
         // Opprett en panel for dealerens kort
-        JPanel dealerPanel = new JPanel();
+        dealerPanel = new JPanel();
         dealerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         JLabel dealerLabel = new JLabel("Dealer: ");
         dealerPanel.add(dealerLabel);
@@ -64,11 +68,10 @@ public class GuiBlackjackGame {
         panel.add(Box.createRigidArea(new Dimension(0, 20)));
 
         // Opprett en panel for spillerens kort
-        JPanel spillerPanel = new JPanel();
+        spillerPanel = new JPanel();
         spillerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        JLabel spillerLabel = new JLabel("Spiller: ");
-        spillerPanel.add(spillerLabel);
-        JLabel spillerKort = new JLabel(spiller.toString());
+        
+        JLabel spillerKort = new JLabel("Spiller: " + spiller.toString());
         spillerPanel.add(spillerKort);
         panel.add(spillerPanel);
 
@@ -76,7 +79,7 @@ public class GuiBlackjackGame {
         panel.add(Box.createRigidArea(new Dimension(0, 20)));
 
         // Opprett en panel for knappene
-        JPanel knappPanel = new JPanel();
+        knappPanel = new JPanel();
         knappPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JButton trekkKnapp = new JButton("Trekk");
@@ -85,18 +88,13 @@ public class GuiBlackjackGame {
             public void actionPerformed(ActionEvent e) {
                 if (!spiller.bust()){
                     spiller.trekkKort(deck);
-
-
-
-
+                    spillerKort.setText("Spiller: " + spiller.toString());
                 }
 
                 if (spiller.bust()) {
                     avsluttSpill(panel, vindu, nyttspillabel, nyttspillPanel, "Dealer vant! Spiller bust.");
-
-
+                    spillerKort.setText("Spiller: " + spiller.toString());
                 }
-                spillerKort.setText(spiller.toString());
             }
         }
         trekkKnapp.addActionListener(new trekkVelger());
@@ -133,12 +131,22 @@ public class GuiBlackjackGame {
         class jaVelger implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // Fjern alle spillkomponenter
                 panel.remove(dealerPanel);
                 panel.remove(spillerPanel);
                 panel.remove(knappPanel);
+                
                 // Fjern resultatmelding hvis den finnes
-                if (panel.getComponentCount() > 4) { // 4 er de faste komponentene
-                    panel.remove(panel.getComponent(panel.getComponentCount()-1));
+                if (vinnerLabel != null && vinnerLabel.getParent() != null) {
+                    panel.remove(vinnerLabel);
+                }
+                
+                // Fjern mellomrom hvis det finnes
+                if (panel.getComponentCount() > 2) { // 2 er nyttspill-komponentene
+                    Component comp = panel.getComponent(panel.getComponentCount()-1);
+                    if (comp instanceof Box.Filler) {
+                        panel.remove(comp);
+                    }
                 }
                 
                 nyttspillabel.setVisible(false);
@@ -156,10 +164,10 @@ public class GuiBlackjackGame {
     }
 
     private static void avsluttSpill(JPanel panel, JFrame vindu, JLabel nyttspillabel, JPanel nyttspillPanel, String melding) {
-        JLabel vinner = new JLabel(melding);
-        vinner.setAlignmentX(Component.CENTER_ALIGNMENT);
+        vinnerLabel = new JLabel(melding);
+        vinnerLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(Box.createRigidArea(new Dimension(0, 10)));
-        panel.add(vinner);
+        panel.add(vinnerLabel);
         
         nyttspillabel.setVisible(true);
         nyttspillPanel.setVisible(true);
