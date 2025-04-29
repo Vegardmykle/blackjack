@@ -1,1 +1,1 @@
-blackjack med gui implementasjon 
+blackjack med GUI implementasjon 
