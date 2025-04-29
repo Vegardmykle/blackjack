@@ -113,7 +113,7 @@ public class GuiBlackjackGame {
                 } else if (spiller.totalpoeng() == dealer.totalpoeng() && !spiller.bust()) {
                     resultat = "Split! Ble likt!";
                 } else {
-                    resultat = "Dealer vant!";
+                resultat = "Dealer vant!";
                 }
                 
                 avsluttSpill(panel, vindu, nyttspillabel, nyttspillPanel, resultat);
