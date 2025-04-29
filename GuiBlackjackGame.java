@@ -1,77 +1,111 @@
+import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class GuiBlackjackGame{
+public class GuiBlackjackGame {
     static String valg = "vet ikke";
     static boolean ferdig = false;
+
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-        } catch (Exception e) {System.exit(1);}
+        } catch (Exception e) {
+            System.exit(1);
+        }
 
         JFrame vindu = new JFrame("Blackjack");
         vindu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        // Bruk en panel med BoxLayout i vertikal retning
         JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         vindu.add(panel);
-
 
         Spiller spiller = new Spiller();
         Spiller dealer = new Spiller();
         KortStokk deck = new KortStokk();
-        
 
         spiller.trekkKort(deck);
         spiller.trekkKort(deck);
         dealer.trekkKort(deck);
 
-        JLabel spillerKort = new JLabel(spiller.toString()+" spiller\n");
-        panel.add(spillerKort);
+        // Opprett en panel for dealerens kort
+        JPanel dealerPanel = new JPanel();
+        dealerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel dealerLabel = new JLabel("Dealer: ");
+        dealerPanel.add(dealerLabel);
+        JLabel dealerKort = new JLabel(dealer.toString());
+        dealerPanel.add(dealerKort);
+        panel.add(dealerPanel);
 
-        JLabel dealerKort = new JLabel(dealer.toString()+ " dealer");
-        panel.add(dealerKort);
-        JButton trekkKnapp = new JButton("trekk");
-        class trekkVelger implements ActionListener{
+        // Legg til litt mellomrom
+        panel.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        // Opprett en panel for spillerens kort
+        JPanel spillerPanel = new JPanel();
+        spillerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel spillerLabel = new JLabel("Spiller: ");
+        spillerPanel.add(spillerLabel);
+        JLabel spillerKort = new JLabel(spiller.toString());
+        spillerPanel.add(spillerKort);
+        panel.add(spillerPanel);
+
+        // Legg til litt mellomrom
+        panel.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        // Opprett en panel for knappene
+        JPanel knappPanel = new JPanel();
+        knappPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JButton trekkKnapp = new JButton("Trekk");
+        class trekkVelger implements ActionListener {
             @Override
-            public void actionPerformed (ActionEvent e){
-                if(spiller.bust() == true) return; 
+            public void actionPerformed(ActionEvent e) {
+                if (spiller.bust()) return;
 
                 spiller.trekkKort(deck);
-                spillerKort.setText(spiller.toString()+" spiller");
-
-
+                spillerKort.setText(spiller.toString());
             }
         }
         trekkKnapp.addActionListener(new trekkVelger());
-        panel.add(trekkKnapp);
-        
-        JButton standKnapp = new JButton("stand");
-        class standVelger implements ActionListener{
+        knappPanel.add(trekkKnapp);
+
+        JButton standKnapp = new JButton("Stand");
+        class standVelger implements ActionListener {
             @Override
-            public void actionPerformed(ActionEvent e){
+            public void actionPerformed(ActionEvent e) {
                 dealer.trekkKort(deck);
-                while(dealer.totalpoeng()<17){
+                while (dealer.totalpoeng() < 17) {
                     dealer.trekkKort(deck);
                 }
-                JLabel vinner = new JLabel("");
+                dealerKort.setText(dealer.toString());
+
+                JLabel vinner = new JLabel();
+                vinner.setAlignmentX(Component.CENTER_ALIGNMENT);
+                
+                if ((spiller.totalpoeng() > dealer.totalpoeng() || dealer.bust()) && !spiller.bust()) {
+                    vinner.setText("Spiller vant!");
+                } else if (spiller.totalpoeng() == dealer.totalpoeng() && !spiller.bust()) {
+                    vinner.setText("Split! Ble likt!");
+                } else {
+                    vinner.setText("Dealer vant!");
+                }
+                
+                panel.add(Box.createRigidArea(new Dimension(0, 10)));
                 panel.add(vinner);
-                dealerKort.setText(dealer.toString()+ " dealer");
-                if((spiller.totalpoeng()> dealer.totalpoeng() || dealer.bust()==true)&& spiller.bust()!=true){
-            
-                    vinner.setText("spiller vant");
-        }
-        else if (spiller.totalpoeng() == dealer.totalpoeng()&&spiller.bust()!=true){
-            vinner.setText("split! ble likt!");
-        }
-        else{
-            vinner.setText("dealer vant!");
-        }
+                vindu.pack();
+                
+                // Deaktiver knappene etter at spillet er over
+                trekkKnapp.setEnabled(false);
+                standKnapp.setEnabled(false);
             }
         }
         standKnapp.addActionListener(new standVelger());
-        panel.add(standKnapp);
+        knappPanel.add(standKnapp);
+
+        panel.add(knappPanel);
 
         vindu.pack();
         vindu.setVisible(true);
     }
-
 }
