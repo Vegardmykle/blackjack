@@ -1,10 +1,12 @@
 
+import java.text.ParseException;
 import java.util.HashMap;
 
 public class Kort{
     private HashMap<String,Integer> rankene = new  HashMap<>();
     private String denneRank;
     private String denneFarge;
+    private String bilde;
 
 
     public Kort(String rank, String farge){
@@ -21,6 +23,15 @@ public class Kort{
     }
     public int verdi (){
         return rankene.get(denneRank);
+    }
+    public String hentBikde() throws ParseException{
+
+            if (Integer.parseInt(denneRank) <=10){
+                bilde = denneRank + "_of_"+ denneFarge+".png";
+            }
+        
+
+        
     }
     @Override
     public String toString(){
