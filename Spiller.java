@@ -12,8 +12,7 @@ public class Spiller{
 
         return korte;
     }
-    public ArrayList bildeKortListe(){
-        
+    public ArrayList<Kort> getHand(){
         return kort;
     }
     public int totalpoeng (){

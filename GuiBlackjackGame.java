@@ -1,17 +1,16 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.io.IOException;
-import java.imageio.imageio;
-import java.io.File;
+import java.util.List;
+import java.util.ArrayList;
 
 public class GuiBlackjackGame {
     private static JPanel dealerPanel;
     private static JPanel spillerPanel;
     private static JPanel knappPanel;
     private static JLabel vinnerLabel;
-
-
+    private static List<JLabel> dealerCardLabels = new ArrayList<>();
+    private static List<JLabel> playerCardLabels = new ArrayList<>();
 
     public static void main(String[] args) {
         try {
@@ -51,26 +50,40 @@ public class GuiBlackjackGame {
         vindu.setVisible(true);
     }
 
-    private static void startSpill(JPanel panel, JFrame vindu, JLabel nyttspillabel, JPanel nyttspillPanel, JButton jaKnapp, JButton neiKnapp) {
+    private static void startSpill(JPanel panel, JFrame vindu, JLabel nyttspillabel, 
+                                 JPanel nyttspillPanel, JButton jaKnapp, JButton neiKnapp) {
         Spiller spiller = new Spiller();
         Spiller dealer = new Spiller();
         KortStokk deck = new KortStokk();
         
+        // Clear previous card labels
+        dealerCardLabels.clear();
+        playerCardLabels.clear();
+
+        // Deal initial cards
         spiller.trekkKort(deck);
         spiller.trekkKort(deck);
         dealer.trekkKort(deck);
 
         // Opprett en panel for dealerens kort
-
         dealerPanel = new JPanel();
         dealerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         JLabel dealerLabel = new JLabel("Dealer: ");
         dealerPanel.add(dealerLabel);
 
-
-
-        JLabel dealerKort = new JLabel(dealer.toString());
-        dealerPanel.add(dealerKort);
+        // Add dealer's cards
+        for (Kort kort : dealer.getHand()) {
+            JLabel cardLabel = new JLabel();
+            ImageIcon icon = kort.hentBilde();
+            if (icon != null) {
+                Image img = icon.getImage().getScaledInstance(80, 120, Image.SCALE_SMOOTH);
+                cardLabel.setIcon(new ImageIcon(img));
+            } else {
+                cardLabel.setText(kort.toString());
+            }
+            dealerPanel.add(cardLabel);
+            dealerCardLabels.add(cardLabel);
+        }
         panel.add(dealerPanel);
 
         // Legg til litt mellomrom
@@ -79,9 +92,22 @@ public class GuiBlackjackGame {
         // Opprett en panel for spillerens kort
         spillerPanel = new JPanel();
         spillerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        
-        JLabel spillerKort = new JLabel("Spiller: " + spiller.toString());
-        spillerPanel.add(spillerKort);
+        JLabel spillerLabel = new JLabel("Spiller: ");
+        spillerPanel.add(spillerLabel);
+
+        // Add player's cards
+        for (Kort kort : spiller.getHand()) {
+            JLabel cardLabel = new JLabel();
+            ImageIcon icon = kort.hentBilde();
+            if (icon != null) {
+                Image img = icon.getImage().getScaledInstance(80, 120, Image.SCALE_SMOOTH);
+                cardLabel.setIcon(new ImageIcon(img));
+            } else {
+                cardLabel.setText(kort.toString());
+            }
+            spillerPanel.add(cardLabel);
+            playerCardLabels.add(cardLabel);
+        }
         panel.add(spillerPanel);
 
         // Legg til litt mellomrom
@@ -95,14 +121,25 @@ public class GuiBlackjackGame {
         class trekkVelger implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!spiller.bust()){
+                if (!spiller.bust()) {
                     spiller.trekkKort(deck);
-                    spillerKort.setText("Spiller: " + spiller.toString());
+                    // Add new card to player panel
+                    Kort newCard = spiller.getHand().get(spiller.getHand().size()-1);
+                    JLabel cardLabel = new JLabel();
+                    ImageIcon icon = newCard.hentBilde();
+                    if (icon != null) {
+                        Image img = icon.getImage().getScaledInstance(80, 120, Image.SCALE_SMOOTH);
+                        cardLabel.setIcon(new ImageIcon(img));
+                    } else {
+                        cardLabel.setText(newCard.toString());
+                    }
+                    spillerPanel.add(cardLabel);
+                    playerCardLabels.add(cardLabel);
+                    vindu.pack();
                 }
 
                 if (spiller.bust()) {
                     avsluttSpill(panel, vindu, nyttspillabel, nyttspillPanel, "Dealer vant! Spiller bust.");
-                    spillerKort.setText("Spiller: " + spiller.toString());
                 }
             }
         }
@@ -113,12 +150,27 @@ public class GuiBlackjackGame {
         class standVelger implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // Reveal dealer's cards
                 dealer.trekkKort(deck);
                 while (dealer.totalpoeng() < 17) {
                     dealer.trekkKort(deck);
                 }
-                dealerKort.setText(dealer.toString());
-
+                
+                // Update dealer's card display
+                dealerPanel.removeAll();
+                dealerPanel.add(new JLabel("Dealer: "));
+                for (Kort kort : dealer.getHand()) {
+                    JLabel cardLabel = new JLabel();
+                    ImageIcon icon = kort.hentBilde();
+                    if (icon != null) {
+                        Image img = icon.getImage().getScaledInstance(80, 120, Image.SCALE_SMOOTH);
+                        cardLabel.setIcon(new ImageIcon(img));
+                    } else {
+                        cardLabel.setText(kort.toString());
+                    }
+                    dealerPanel.add(cardLabel);
+                }
+                
                 String resultat;
                 if ((spiller.totalpoeng() > dealer.totalpoeng() || dealer.bust()) && !spiller.bust()) {
                     resultat = "Spiller vant!";
@@ -129,6 +181,7 @@ public class GuiBlackjackGame {
                 }
                 
                 avsluttSpill(panel, vindu, nyttspillabel, nyttspillPanel, resultat);
+                vindu.pack();
             }
         }
         standKnapp.addActionListener(new standVelger());
@@ -172,7 +225,8 @@ public class GuiBlackjackGame {
         vindu.pack();
     }
 
-    private static void avsluttSpill(JPanel panel, JFrame vindu, JLabel nyttspillabel, JPanel nyttspillPanel, String melding) {
+    private static void avsluttSpill(JPanel panel, JFrame vindu, JLabel nyttspillabel, 
+                                   JPanel nyttspillPanel, String melding) {
         vinnerLabel = new JLabel(melding);
         vinnerLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(Box.createRigidArea(new Dimension(0, 10)));
