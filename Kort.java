@@ -37,16 +37,16 @@ public class Kort {
             String filnavn;
             switch (denneRank) {
                 case "J":
-                    filnavn = "jack_of_" + denneFarge + ".png";
+                    filnavn = "jack_of_" + denneFarge + "2.png";
                     break;
                 case "Q":
-                    filnavn = "queen_of_" + denneFarge + ".png";
+                    filnavn = "queen_of_" + denneFarge + "2.png";
                     break;
                 case "K":
-                    filnavn = "king_of_" + denneFarge + ".png";
+                    filnavn = "king_of_" + denneFarge + "2.png";
                     break;
                 case "A":
-                    filnavn = "ace_of_" + denneFarge + ".png";
+                    filnavn = "ace_of_" + denneFarge + "2.png";
                     break;
                 default:
                     filnavn = denneRank + "_of_" + denneFarge + ".png";
