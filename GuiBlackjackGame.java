@@ -1,12 +1,17 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import java.io.IOException;
+import java.imageio.imageio;
+import java.io.File;
 
 public class GuiBlackjackGame {
     private static JPanel dealerPanel;
     private static JPanel spillerPanel;
     private static JPanel knappPanel;
     private static JLabel vinnerLabel;
+
+
 
     public static void main(String[] args) {
         try {
@@ -56,10 +61,14 @@ public class GuiBlackjackGame {
         dealer.trekkKort(deck);
 
         // Opprett en panel for dealerens kort
+
         dealerPanel = new JPanel();
         dealerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         JLabel dealerLabel = new JLabel("Dealer: ");
         dealerPanel.add(dealerLabel);
+
+
+
         JLabel dealerKort = new JLabel(dealer.toString());
         dealerPanel.add(dealerKort);
         panel.add(dealerPanel);

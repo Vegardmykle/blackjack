@@ -3,13 +3,18 @@ import java.util.ArrayList;
 
 public class Spiller{
     private ArrayList<Kort> kort = new ArrayList<>();
-
+   
+    
     public Kort trekkKort(KortStokk kortStokk){
+
         Kort korte = kortStokk.trekkKort();
         kort.add(korte);
 
-
         return korte;
+    }
+    public ArrayList bildeKortListe(){
+        
+        return kort;
     }
     public int totalpoeng (){
         int sum = 0;
@@ -33,6 +38,8 @@ public class Spiller{
         }
         return false;
     }
+    
+
 
     @Override
     public String toString(){
