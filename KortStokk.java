@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class KortStokk{
 
-    private String[] sortene = {"hjerter","Kløver","Ruter","Sprar"};
+    private String[] sortene = {"hearts","clubs","diamonds","spades"};
     private String[] tallene = {"2","3","4","5","6","7","8","9","10","J","Q","K","A"};
     private ArrayList<Kort> kortene = new ArrayList<>();
     ArrayList<Kort> blanda = new ArrayList<>();

@@ -3,13 +3,17 @@ import java.util.ArrayList;
 
 public class Spiller{
     private ArrayList<Kort> kort = new ArrayList<>();
-
+   
+    
     public Kort trekkKort(KortStokk kortStokk){
+
         Kort korte = kortStokk.trekkKort();
         kort.add(korte);
 
-
         return korte;
+    }
+    public ArrayList<Kort> getHand(){
+        return kort;
     }
     public int totalpoeng (){
         int sum = 0;
@@ -33,13 +37,13 @@ public class Spiller{
         }
         return false;
     }
+    
+
 
     @Override
     public String toString(){
-        String streng= "";
-        for(Kort kortet : kort){
-            streng+= kortet.toString() + " ";
-        }
-        return streng + "\n poengsum: " + String.valueOf(totalpoeng());
+
+        
+        return  "\n poengsum: " + String.valueOf(totalpoeng());
     }
 }
