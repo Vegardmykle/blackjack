@@ -42,10 +42,8 @@ public class Spiller{
 
     @Override
     public String toString(){
-        String streng= "";
-        for(Kort kortet : kort){
-            streng+= kortet.toString() + " ";
-        }
-        return streng + "\n poengsum: " + String.valueOf(totalpoeng());
+
+        
+        return  "\n poengsum: " + String.valueOf(totalpoeng());
     }
 }

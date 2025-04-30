@@ -46,7 +46,7 @@ public class Kort {
                     filnavn = "king_of_" + denneFarge + "2.png";
                     break;
                 case "A":
-                    filnavn = "ace_of_" + denneFarge + "2.png";
+                    filnavn = "ace_of_" + denneFarge + ".png";
                     break;
                 default:
                     filnavn = denneRank + "_of_" + denneFarge + ".png";

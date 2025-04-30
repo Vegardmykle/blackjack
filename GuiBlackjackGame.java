@@ -1,8 +1,8 @@
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.*;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import javax.swing.*;
 
 public class GuiBlackjackGame {
     private static JPanel dealerPanel;
