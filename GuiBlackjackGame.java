@@ -18,7 +18,6 @@ public class GuiBlackjackGame {
         } catch (Exception e) {
             System.exit(1);
         }
-        //hei
 
         JFrame vindu = new JFrame("Blackjack");
         vindu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
