@@ -26,7 +26,7 @@ public class GuiBlackjackGame {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         vindu.add(panel);
 
-        // Nytt spill-komponenter
+
         JLabel nyttspillabel = new JLabel("Vil du spille igjen?");
         nyttspillabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         nyttspillabel.setVisible(false);
@@ -56,22 +56,22 @@ public class GuiBlackjackGame {
         Spiller dealer = new Spiller();
         KortStokk deck = new KortStokk();
         
-        // Clear previous card labels
+
         dealerCardLabels.clear();
         playerCardLabels.clear();
 
-        // Deal initial cards
+
         spiller.trekkKort(deck);
         spiller.trekkKort(deck);
         dealer.trekkKort(deck);
 
-        // Opprett en panel for dealerens kort
+
         dealerPanel = new JPanel();
         dealerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         JLabel dealerLabel = new JLabel("Dealer: ");
         dealerPanel.add(dealerLabel);
 
-        // Add dealer's cards
+
         for (Kort kort : dealer.getHand()) {
             JLabel cardLabel = new JLabel();
             ImageIcon icon = kort.hentBilde();
@@ -86,16 +86,16 @@ public class GuiBlackjackGame {
         }
         panel.add(dealerPanel);
 
-        // Legg til litt mellomrom
+
         panel.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        // Opprett en panel for spillerens kort
+
         spillerPanel = new JPanel();
         spillerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         JLabel spillerLabel = new JLabel("Spiller: ");
         spillerPanel.add(spillerLabel);
 
-        // Add player's cards
+
         for (Kort kort : spiller.getHand()) {
             JLabel cardLabel = new JLabel();
             ImageIcon icon = kort.hentBilde();
@@ -110,10 +110,10 @@ public class GuiBlackjackGame {
         }
         panel.add(spillerPanel);
 
-        // Legg til litt mellomrom
+
         panel.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        // Opprett en panel for knappene
+
         knappPanel = new JPanel();
         knappPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -123,7 +123,7 @@ public class GuiBlackjackGame {
             public void actionPerformed(ActionEvent e) {
                 if (!spiller.bust()) {
                     spiller.trekkKort(deck);
-                    // Add new card to player panel
+
                     Kort newCard = spiller.getHand().get(spiller.getHand().size()-1);
                     JLabel cardLabel = new JLabel();
                     ImageIcon icon = newCard.hentBilde();
@@ -150,13 +150,13 @@ public class GuiBlackjackGame {
         class standVelger implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Reveal dealer's cards
+
                 dealer.trekkKort(deck);
                 while (dealer.totalpoeng() < 17) {
                     dealer.trekkKort(deck);
                 }
                 
-                // Update dealer's card display
+
                 dealerPanel.removeAll();
                 dealerPanel.add(new JLabel("Dealer: "));
                 for (Kort kort : dealer.getHand()) {
@@ -189,21 +189,21 @@ public class GuiBlackjackGame {
 
         panel.add(knappPanel);
         
-        // Knappelyttere for nytt spill
+
         class jaVelger implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Fjern alle spillkomponenter
+
                 panel.remove(dealerPanel);
                 panel.remove(spillerPanel);
                 panel.remove(knappPanel);
                 
-                // Fjern resultatmelding hvis den finnes
+
                 if (vinnerLabel != null && vinnerLabel.getParent() != null) {
                     panel.remove(vinnerLabel);
                 }
                 
-                // Fjern mellomrom hvis det finnes
+
                 if (panel.getComponentCount() > 2) { // 2 er nyttspill-komponentene
                     Component comp = panel.getComponent(panel.getComponentCount()-1);
                     if (comp instanceof Box.Filler) {
