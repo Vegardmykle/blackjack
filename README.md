@@ -8,16 +8,21 @@ Dette er et enkelt Blackjack-spill med GUI implementasjon og mulig å spille fra
 2. Følg instruksjonene i terminalen for å trekke kort, stå eller avslutte.
 3. Målet er å få en hånd nærmere 21 enn dealeren uten å gå over.
 
-## Krav
 
-- Python 3 (dersom programmet er skrevet i Python)
-- Ingen eksterne avhengigheter
+
 
 ## Kjøring
 
+Kompiler koden:
 ```bash
-python blackjack.py
+javac *.java
 ```
+
+Kjør spillet:
+```bash
+java Main
+```
+
 
 ## Lisens
 
